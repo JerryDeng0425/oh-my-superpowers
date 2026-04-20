@@ -1,6 +1,33 @@
 {
-  "name": "superpowers",
+  "name": "oh-my-superpowers",
   "version": "5.0.7",
   "type": "module",
-  "main": ".opencode/plugins/superpowers.js"
+  "main": ".opencode/plugins/superpowers.js",
+  "description": "Superpowers workflow discipline meets oh-my-opencode agent orchestration — TDD, two-stage review, multi-model dispatch",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JerryDeng0425/oh-my-superpowers.git"
+  },
+  "homepage": "https://github.com/JerryDeng0425/oh-my-superpowers#readme",
+  "keywords": [
+    "superpowers",
+    "oh-my-opencode",
+    "opencode",
+    "tdd",
+    "skills",
+    "ai-coding",
+    "agent-orchestration"
+  ],
+  "files": [
+    "skills/",
+    "agents/",
+    ".opencode/plugins/",
+    ".opencode/INSTALL.md",
+    "hooks/",
+    "commands/",
+    "README.md",
+    "LICENSE",
+    "GEMINI.md"
+  ]
 }
