@@ -1,194 +1,188 @@
-# Superpowers
+# Oh My Superpowers
 
-Superpowers is a complete software development workflow for your coding agents, built on top of a set of composable "skills" and some initial instructions that make sure your agent uses them.
+Superpowers' workflow discipline meets oh-my-opencode's agent orchestration.
 
-## How it works
+This is a fork of [obra/superpowers](https://github.com/obra/superpowers) that integrates with [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) — combining Superpowers' strict development process with oh-my-opencode's 11 specialized agents, multi-model routing, and tool infrastructure.
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
+## Why This Exists
 
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
+| Layer | Superpowers (original) | oh-my-opencode |
+|-------|----------------------|----------------|
+| **What it provides** | Workflow discipline (brainstorm → plan → TDD → review) | Agent orchestration (11 agents, multi-model, tools) |
+| **Constraint method** | Prompt-based iron laws | Hook-based interception + tool precision |
+| **Trust model** | Doesn't trust AI self-discipline | Doesn't trust any single model |
+| **Philosophy** | "Discipline over inspiration" | "Orchestrate everything, don't lock in" |
 
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
+**Together**: Superpowers defines *how work should be done*, oh-my-opencode provides *what to use and how to schedule it*.
 
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
+```
+┌──────────────────────────────────────────────┐
+│   Oh My Superpowers                          │
+│                                              │
+│   Superpowers Skills (discipline layer)      │
+│   - TDD, debugging, review processes         │
+│   - Brainstorming, plan writing methodology  │
+│   - Two-stage review (spec → quality)        │
+│                                              │
+│   oh-my-opencode Agents (orchestration)      │
+│   - Sisyphus (main), Oracle (review)         │
+│   - Prometheus (planning), Metis (analysis)  │
+│   - Momus (spec review), Explore, Librarian   │
+│   - Multi-model routing, session continuity  │
+└──────────────────────────────────────────────┘
+```
 
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
+## Agent Role Mapping
 
+The core integration: each Superpowers workflow role maps to an oh-my-opencode agent.
 
-## Sponsorship
+| Superpowers Role | oh-my-opencode Agent | Dispatch |
+|---|---|---|
+| **Controller** (orchestrator) | **Sisyphus** | Main agent, no dispatch needed |
+| **Implementer** (simple) | **Sisyphus-Junior** via `category="quick"` | Fast model, TDD skill loaded |
+| **Implementer** (complex) | **Sisyphus-Junior** via `category="deep"` | Autonomous model, explores codebase |
+| **Implementer** (hard logic) | **Sisyphus-Junior** via `category="ultrabrain"` | High-reasoning model |
+| **Implementer** (frontend) | **Sisyphus-Junior** via `category="visual-engineering"` | Creative model |
+| **Spec Reviewer** | **Momus** | `subagent_type="momus"` — verifies implementation matches spec |
+| **Code Quality Reviewer** | **Oracle** | `subagent_type="oracle"` — architecture, quality, deep review |
+| **Requirements Analysis** | **Prometheus + Metis** | Metis pre-analyzes → Prometheus plans |
+| **Codebase Search** | **Explore** | `subagent_type="explore"`, background |
+| **External Research** | **Librarian** | `subagent_type="librarian"`, background |
 
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
+## The Workflow
 
-Thanks! 
+```
+1. brainstorming     → Sisyphus asks what you really want, designs with you
+2. using-git-worktrees → Isolated workspace on new branch
+3. writing-plans     → Prometheus builds detailed, atomic task plan
+4. subagent-driven-development → Per-task dispatch with two-stage review:
+   ├── Implementer (via task category) → writes code + tests
+   ├── Spec Reviewer (Momus)           → "did it build what was asked?"
+   └── Code Reviewer (Oracle)          → "is it well-built?"
+5. test-driven-development → RED-GREEN-REFACTOR enforced
+6. finishing-a-development-branch → merge/PR/cleanup
+```
 
-- Jesse
+### Two-Stage Review (the key discipline)
 
+Every implementation task goes through two independent reviews:
+
+1. **Spec compliance** (Momus) — "Did it implement what the spec requires? Nothing more, nothing less."
+2. **Code quality** (Oracle) — "Is it well-architected, tested, maintainable?"
+
+Issues found in either review go back to the implementer (via `session_id` continuity), then re-reviewed. Neither stage is skippable.
+
+## Skills
+
+All skills are prefixed `omo-` to indicate oh-my-opencode integration. They use OmO's `task()` API for sub-agent dispatch.
+
+### Development Flow
+
+| Skill | Purpose |
+|-------|---------|
+| `omo-brainstorming` | Socratic design refinement before code |
+| `omo-writing-plans` | Atomic implementation plans |
+| `omo-using-git-worktrees` | Isolated workspace setup |
+| `omo-subagent-driven-development` | Per-task dispatch with two-stage review |
+| `omo-executing-plans` | Batch execution with human checkpoints |
+| `omo-dispatching-parallel-agents` | Concurrent sub-agent workflows |
+| `omo-test-driven-development` | RED-GREEN-REFACTOR enforcement |
+| `omo-verification-before-completion` | Evidence before assertions |
+| `omo-systematic-debugging` | 4-phase root cause analysis |
+
+### Review & Completion
+
+| Skill | Purpose |
+|-------|---------|
+| `omo-requesting-code-review` | Pre-review checklist |
+| `omo-receiving-code-review` | Responding to feedback with rigor |
+| `omo-finishing-a-development-branch` | Merge/PR decision workflow |
+
+### Meta
+
+| Skill | Purpose |
+|-------|---------|
+| `omo-using-superpowers` | Skill discovery and auto-injection |
+| `omo-writing-skills` | Create new skills |
+| `omo-sp-omo-bridge` | SP role → OmO agent routing table |
+
+## Bridge Skill
+
+The `omo-sp-omo-bridge` skill provides a declarative mapping table that Sisyphus auto-reads when dispatching sub-agents. It maps:
+
+- **Role → agent type**: Which OmO agent handles which SP role
+- **Skill injection**: Which skills to auto-load per task type
+- **Two-stage review**: Spec (Momus) → Quality (Oracle) enforcement
+- **Session continuity**: How to use `session_id` for follow-up dispatches
+
+This is the integration described in [inspire/05-integration-guide.md](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/05-integration-guide.md), Section C — minimal intrusion, adjustable anytime.
+
+## Architecture
+
+```
+oh-my-superpowers/
+├── skills/                      # 15 OmO-integrated skills (omo- prefix)
+│   ├── omo-sp-omo-bridge/       # Bridge: SP roles → OmO agents
+│   ├── omo-subagent-driven-development/
+│   │   ├── SKILL.md             # Controller process with OmO task() API
+│   │   ├── implementer-prompt.md
+│   │   ├── spec-reviewer-prompt.md
+│   │   └── code-quality-reviewer-prompt.md
+│   └── ...                      # Other workflow skills
+├── agents/
+│   └── code-reviewer.md         # Reference prompt (dispatched via Oracle)
+├── inspire/                     # Analysis documents behind this integration
+│   ├── 01-superpowers-analysis.md
+│   ├── 02-oh-my-opencode-analysis.md
+│   ├── 03-comparison.md
+│   ├── 04-agent-role-mapping.md
+│   ├── 05-integration-guide.md
+│   └── 06-opencode-native-install-analysis.md
+├── hooks/                       # Session start hooks
+├── commands/                    # Slash commands
+└── tests/                       # Integration tests
+```
+
+## Inspiration
+
+The `inspire/` directory contains the analysis work that led to this integration:
+
+1. **[Superpowers analysis](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/01-superpowers-analysis.md)** — 14 skills, 1 agent, pure Markdown workflow framework
+2. **[oh-my-opencode analysis](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/02-oh-my-opencode-analysis.md)** — 11 agents, 52 hooks, full TypeScript orchestration system
+3. **[Comparison](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/03-comparison.md)** — "Superpowers is the discipline manual; OmO is the operating system"
+4. **[Agent role mapping](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/04-agent-role-mapping.md)** — SP's 4 roles mapped to OmO's 11 agents
+5. **[Integration guide](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/05-integration-guide.md)** — Three integration paths (A: modify skills, B: custom categories, C: bridge skill)
+6. **[OpenCode native install analysis](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/inspire/06-opencode-native-install-analysis.md)** — Installation strategy
+
+Also see the original [README-ORIGIN.md](https://github.com/JerryDeng0425/oh-my-superpowers/blob/main/README-ORIGIN.md) from the upstream Superpowers project.
+
+**One-line conclusion**: Superpowers completes the development cycle with **4 roles × strict process discipline**; oh-my-opencode completes the same cycle with **11 agents × specialized division of labor**. Oh My Superpowers combines both.
 
 ## Installation
 
-**Note:** Installation differs by platform. Claude Code or Cursor have built-in plugin marketplaces. Codex and OpenCode require manual setup.
-
-### Claude Code Official Marketplace
-
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
-
-Install the plugin from Claude marketplace:
-
-```bash
-/plugin install superpowers@claude-plugins-official
-```
-
-### Claude Code (via Plugin Marketplace)
-
-In Claude Code, register the marketplace first:
-
-```bash
-/plugin marketplace add obra/superpowers-marketplace
-```
-
-Then install the plugin from this marketplace:
-
-```bash
-/plugin install superpowers@superpowers-marketplace
-```
-
-### Cursor (via Plugin Marketplace)
-
-In Cursor Agent chat, install from marketplace:
-
-```text
-/add-plugin superpowers
-```
-
-or search for "superpowers" in the plugin marketplace.
-
-### Codex
-
-Tell Codex:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.codex.md](docs/README.codex.md)
-
 ### OpenCode
 
-Tell OpenCode:
-
-```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-```
-
-**Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
-
-### GitHub Copilot CLI
+This plugin is designed for OpenCode with oh-my-opencode installed.
 
 ```bash
-copilot plugin marketplace add obra/superpowers-marketplace
-copilot plugin install superpowers@superpowers-marketplace
+# Install oh-my-opencode first
+opencode plugin install oh-my-opencode
+
+# Then install this plugin
+opencode plugin install oh-my-superpowers
 ```
-
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/obra/superpowers
-```
-
-To update:
-
-```bash
-gemini extensions update superpowers
-```
-
-### Verify Installation
-
-Start a new session in your chosen platform and ask for something that should trigger a skill (for example, "help me plan this feature" or "let's debug this issue"). The agent should automatically invoke the relevant superpowers skill.
-
-## The Basic Workflow
-
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
-
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
-
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
-
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
-
-## What's Inside
-
-### Skills Library
-
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
-
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
-
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
-
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
 
 ## Philosophy
 
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
-
-Read more: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
-
-## Contributing
-
-Skills live directly in this repository. To contribute:
-
-1. Fork the repository
-2. Create a branch for your skill
-3. Follow the `writing-skills` skill for creating and testing new skills
-4. Submit a PR
-
-See `skills/omo-writing-skills/SKILL.md` for the complete guide.
-
-## Updating
-
-Skills update automatically when you update the plugin:
-
-```bash
-/plugin update superpowers
-```
+- **Test-Driven Development** — Write tests first, always
+- **Two-stage review** — Spec compliance, then code quality, neither skippable
+- **Systematic over ad-hoc** — Process over guessing
+- **Evidence over claims** — Verify before declaring success
+- **Right model for the job** — Fast model for simple tasks, reasoning model for hard ones
+- **Discipline + orchestration** — Superpowers says *how*, OmO provides *what*
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License — see LICENSE file for details.
 
-## Community
-
-Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
-
-For community support, questions, and sharing what you're building with Superpowers, join us on [Discord](https://discord.gg/Jd8Vphy9jq).
-
-## Support
-
-- **Discord**: [Join us on Discord](https://discord.gg/Jd8Vphy9jq)
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Marketplace**: https://github.com/obra/superpowers-marketplace
+Based on [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent (Prime Radiant), integrated with [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) by YeonGyu Kim.
