@@ -160,16 +160,57 @@ Also see the original [README-ORIGIN.md](https://github.com/JerryDeng0425/oh-my-
 
 ## Installation
 
-### OpenCode
+### OpenCode (via npm)
 
 This plugin is designed for OpenCode with oh-my-opencode installed.
 
-```bash
-# Install oh-my-opencode first
-opencode plugin install oh-my-opencode
+Add to your `opencode.json` (global `~/.config/opencode/opencode.json` or project-level):
 
-# Then install this plugin
+```json
+{
+  "plugin": ["oh-my-superpowers"]
+}
+```
+
+Or install via CLI:
+
+```bash
 opencode plugin install oh-my-superpowers
+```
+
+Pin a specific version:
+
+```json
+{
+  "plugin": ["oh-my-superpowers@^5.0.7"]
+}
+```
+
+### Prerequisites
+
+- [OpenCode](https://opencode.ai) installed
+- [oh-my-opencode](https://github.com/code-yeongyu/oh-my-opencode) plugin installed
+
+```bash
+# Install oh-my-opencode first if not already
+opencode plugin install oh-my-opencode
+```
+
+### Verify
+
+Start a new OpenCode session and ask: "Tell me about your superpowers". The agent should recognize and list the available skills.
+
+### Publishing (maintainers)
+
+```bash
+# Bump version
+./scripts/bump-version.sh <new-version>
+
+# Dry run — verify what gets packed
+npm pack --dry-run
+
+# Publish to npm
+npm publish
 ```
 
 ## Philosophy
